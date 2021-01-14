@@ -1,11 +1,11 @@
 package com.zrv.sprbootsrv.controller;
 
+import com.zrv.sprbootsrv.domain.User;
 import com.zrv.sprbootsrv.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,12 +14,17 @@ public class UsersController {
     private final UserService userService;
 
     @GetMapping("/api/v1/users")
-    Map<String, Integer> findUser(@RequestParam int id) throws SQLException {
-        return null;
+    User findUser(@RequestParam Integer id) throws SQLException {
+        return userService.findUser(id);
     }
 
     @PostMapping("/api/v1/users")
-    void addUser() throws SQLException {
+    void addUser(@RequestBody User user) throws SQLException {
+        userService.addUser(user);
+    }
+
+    @PutMapping("/api/v1/users")
+    void changeUser() throws SQLException {
 
     }
 

@@ -11,7 +11,12 @@ import java.util.Optional;
 public class CardDao implements Dao<Card> {
 
     @Override
-    public Optional<Card> get(String id) throws SQLException {
+    public Optional<Card> get(Integer id) throws SQLException {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Card> find(Integer id) throws SQLException {
         return Optional.empty();
     }
 

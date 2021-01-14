@@ -10,7 +10,12 @@ import java.util.Optional;
 @Repository
 public class GroupDao implements Dao<Group> {
     @Override
-    public Optional<Group> get(String id) throws SQLException {
+    public Optional<Group> get(Integer id) throws SQLException {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Group> find(Integer id) throws SQLException {
         return Optional.empty();
     }
 
@@ -33,4 +38,5 @@ public class GroupDao implements Dao<Group> {
     public void delete(Group group) throws SQLException {
 
     }
+
 }
