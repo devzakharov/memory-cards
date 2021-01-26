@@ -1,15 +1,13 @@
 package com.zrv.sprbootsrv.dao;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.zrv.sprbootsrv.domain.User;
+import com.zrv.sprbootsrv.service.SHA256CryptoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +17,7 @@ import java.util.Optional;
 public class UserDao implements Dao<User> {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final SHA256CryptoService sha256CryptoService;
 
     @Override
     public Optional<User> get(Integer id) throws SQLException {
@@ -41,9 +40,9 @@ public class UserDao implements Dao<User> {
         paramSource.addValue("avatar", user.getAvatar());
         paramSource.addValue("nickname", user.getNickname());
         paramSource.addValue("login", user.getLogin());
-        paramSource.addValue("password", user.getPassword());
+        paramSource.addValue("password", sha256CryptoService.getHashString(user.getPassword()));
         paramSource.addValue("email", user.getEmail());
-        paramSource.addValue("settings", user.getSettings().toString());
+        paramSource.addValue("settings", user.getSettings());
 
         namedParameterJdbcTemplate.update(query, paramSource);
 
@@ -86,8 +85,30 @@ public class UserDao implements Dao<User> {
         user.setNickname(rs.getString("nickname"));
         user.setEmail(rs.getString("email"));
         user.setPassword(rs.getString("password"));
-        user.setSettings(rs.getObject("settings", JsonNode.class));
+        user.setSettings(rs.getString("settings"));
 
         return user;
+    }
+
+    public boolean isUserLoginExist(User user) {
+        String query = "SELECT * FROM user_table WHERE login = :login";
+
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("login", user.getLogin());
+
+        SqlRowSet rs = namedParameterJdbcTemplate.queryForRowSet(query, parameterSource);
+
+        return rs.next();
+    }
+
+    public boolean isUserEmailExist(User user) {
+        String query = "SELECT * FROM user_table WHERE email = :email";
+
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("email", user.getEmail());
+
+        SqlRowSet rs = namedParameterJdbcTemplate.queryForRowSet(query, parameterSource);
+
+        return rs.next();
     }
 }

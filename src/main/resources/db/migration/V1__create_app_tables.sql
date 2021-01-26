@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS public."user_table"
 (
     id integer NOT NULL DEFAULT nextval('user_id_seq'::regclass),
     avatar character varying COLLATE pg_catalog."default" NOT NULL,
-    nickname character varying COLLATE pg_catalog."default" NOT NULL UNIQUE,
+    nickname character varying COLLATE pg_catalog."default" NOT NULL,
     login character varying COLLATE pg_catalog."default" NOT NULL UNIQUE,
     password character varying COLLATE pg_catalog."default" NOT NULL,
     email character varying COLLATE pg_catalog."default" NOT NULL UNIQUE,

@@ -3,12 +3,15 @@ package com.zrv.sprbootsrv.controller;
 import com.zrv.sprbootsrv.domain.User;
 import com.zrv.sprbootsrv.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.sql.SQLException;
 
 @RestController
 @RequiredArgsConstructor
+@Validated
 public class UsersController {
 
     private final UserService userService;
@@ -19,7 +22,7 @@ public class UsersController {
     }
 
     @PostMapping("/api/v1/users")
-    void addUser(@RequestBody User user) throws SQLException {
+    void addUser(@Valid @RequestBody User user) throws SQLException {
         userService.addUser(user);
     }
 
