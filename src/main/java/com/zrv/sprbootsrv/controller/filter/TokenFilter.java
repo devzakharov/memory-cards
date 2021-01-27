@@ -53,10 +53,10 @@ public class TokenFilter extends GenericFilterBean {
     private Authentication getAuthentication(String token) {
         String email = tokenService.getEmail(token);
         User user = userService.findByAllEmails(email)
-                .orElseThrow(() -> AppException.of(ErrorType.WRONG_JWT_TOKEN));
+                .orElseThrow(() -> AppException.appException(ErrorType.WRONG_JWT_TOKEN));
 
         authRepository.findByUserIdAndToken(user.getId(), token)
-                .orElseThrow(() -> AppException.of(ErrorType.WRONG_JWT_TOKEN));
+                .orElseThrow(() -> AppException.appException(ErrorType.WRONG_JWT_TOKEN));
 
         Set<Role> roles = roleRepository.findByUserId(user.getId());
 

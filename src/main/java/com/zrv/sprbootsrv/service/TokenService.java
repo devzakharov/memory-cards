@@ -35,7 +35,7 @@ public class TokenService {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return true;
         } catch (Exception e) {
-            throw AppException.of(ErrorType.WRONG_JWT_TOKEN);
+            throw AppException.appException(ErrorType.WRONG_JWT_TOKEN);
         }
     }
 

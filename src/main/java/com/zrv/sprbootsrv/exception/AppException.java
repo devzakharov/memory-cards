@@ -13,11 +13,11 @@ public class AppException extends RuntimeException {
         this.httpStatus = httpStatus;
     }
 
-    public static AppException of(ErrorType errorType, Object... args) {
+    public static AppException appException(ErrorType errorType, Object... args) {
         return new AppException(String.format(errorType.getMessage(), args), errorType.getHttpStatus());
     }
 
-    public static AppException of(ErrorType errorType) {
+    public static AppException appException(ErrorType errorType) {
         return new AppException(errorType.getMessage(), errorType.getHttpStatus());
     }
 

@@ -17,16 +17,16 @@ public class UserService {
     private final UserDao userDao;
 
     public User findUser(Integer id) throws SQLException {
-        return userDao.find(id).orElseThrow(() -> AppException.of(ErrorType.USER_NOT_FOUND, id));
+        return userDao.find(id).orElseThrow(() -> AppException.appException(ErrorType.USER_NOT_FOUND, id));
     }
 
     public void addUser(User user) throws SQLException {
 
         if (userDao.isUserEmailExist(user))
-            throw AppException.of(ErrorType.USER_WITH_EMAIL_ALREADY_EXIST, user.getEmail());
+            throw AppException.appException(ErrorType.USER_WITH_EMAIL_ALREADY_EXIST, user.getEmail());
 
         if (userDao.isUserLoginExist(user))
-            throw AppException.of(ErrorType.USER_WITH_LOGIN_ALREADY_EXIST, user.getLogin());
+            throw AppException.appException(ErrorType.USER_WITH_LOGIN_ALREADY_EXIST, user.getLogin());
 
         userDao.save(user);
     }
