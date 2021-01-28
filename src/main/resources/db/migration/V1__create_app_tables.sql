@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS public.user_table
     nickname text NULL UNIQUE,
     "password" text NOT NULL,
     email text NOT NULL UNIQUE,
+    status text NOT NULL,
     CONSTRAINT user_pkey PRIMARY KEY (id)
 );
 
@@ -57,6 +58,15 @@ CREATE TABLE IF NOT EXISTS public.card_last_answered
     last_answered timestamp with time zone NOT NULL,
     check_counter integer NOT NULL DEFAULT 0,
     CONSTRAINT card_last_answered_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.auth
+(
+    id          uuid      NOT NULL,
+    user_id     uuid      NOT NULL,
+    "token"     text      NOT NULL,
+    create_date timestamp NULL,
+    CONSTRAINT auth_pkey PRIMARY KEY (id),
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES user_table (id)
 );
 
 

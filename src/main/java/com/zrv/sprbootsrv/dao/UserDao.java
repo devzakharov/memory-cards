@@ -1,6 +1,6 @@
 package com.zrv.sprbootsrv.dao;
 
-import com.zrv.sprbootsrv.domain.User;
+import com.zrv.sprbootsrv.domain.user.User;
 import com.zrv.sprbootsrv.service.SHA256CryptoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -37,12 +37,9 @@ public class UserDao implements Dao<User> {
 
         MapSqlParameterSource paramSource = new MapSqlParameterSource();
 
-        paramSource.addValue("avatar", user.getAvatar());
         paramSource.addValue("nickname", user.getNickname());
-        paramSource.addValue("login", user.getLogin());
         paramSource.addValue("password", sha256CryptoService.getHashString(user.getPassword()));
         paramSource.addValue("email", user.getEmail());
-        paramSource.addValue("settings", user.getSettings());
 
         namedParameterJdbcTemplate.update(query, paramSource);
 
@@ -79,13 +76,10 @@ public class UserDao implements Dao<User> {
 
         User user = new User();
 
-        user.setId(rs.getInt("id"));
-        user.setAvatar(rs.getString("avatar"));
-        user.setLogin(rs.getString("login"));
+        user.setId((java.util.UUID) rs.getObject("id"));
         user.setNickname(rs.getString("nickname"));
         user.setEmail(rs.getString("email"));
         user.setPassword(rs.getString("password"));
-        user.setSettings(rs.getString("settings"));
 
         return user;
     }
@@ -94,7 +88,6 @@ public class UserDao implements Dao<User> {
         String query = "SELECT * FROM user_table WHERE login = :login";
 
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-        parameterSource.addValue("login", user.getLogin());
 
         SqlRowSet rs = namedParameterJdbcTemplate.queryForRowSet(query, parameterSource);
 

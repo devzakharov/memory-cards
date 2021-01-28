@@ -1,4 +1,4 @@
-package com.zrv.sprbootsrv.domain;
+package com.zrv.sprbootsrv.domain.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -40,4 +40,8 @@ public class User {
     @Email(message = "Email must be in the format address@domain.com")
     @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 }

@@ -1,37 +1,28 @@
 package com.zrv.sprbootsrv.service;
 
-import com.zrv.sprbootsrv.dao.UserDao;
-import com.zrv.sprbootsrv.domain.User;
-import com.zrv.sprbootsrv.exception.AppException;
-import com.zrv.sprbootsrv.exception.ErrorType;
+import com.zrv.sprbootsrv.domain.user.User;
+import com.zrv.sprbootsrv.dto.UserContext;
+import com.zrv.sprbootsrv.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.connector.Request;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserDao userDao;
+    private final UserContext userContext;
+    private final UserRepository userRepository;
 
-    public User findUser(Integer id) throws SQLException {
-        return userDao.find(id).orElseThrow(() -> AppException.appException(ErrorType.USER_NOT_FOUND, id));
+    @Transactional(readOnly = true)
+    public UserContext getRequestContext() {
+        return userContext;
     }
 
-    public void addUser(User user) throws SQLException {
-
-        if (userDao.isUserEmailExist(user))
-            throw AppException.appException(ErrorType.USER_WITH_EMAIL_ALREADY_EXIST, user.getEmail());
-
-        if (userDao.isUserLoginExist(user))
-            throw AppException.appException(ErrorType.USER_WITH_LOGIN_ALREADY_EXIST, user.getLogin());
-
-        userDao.save(user);
-    }
-
-    public Request getRequestContext() {
-        return null;
+    @Transactional(readOnly = true)
+    public Optional<User> findByAllEmails(String email) {
+        return userRepository.findByAllEmails(email);
     }
 }

@@ -16,7 +16,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class TokenService {
 
-    @Value("${property}")
+    @Value("123")
     private String secretKey;
 
     public String createToken(String email) {

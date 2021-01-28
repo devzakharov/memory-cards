@@ -1,12 +1,21 @@
 package com.zrv.sprbootsrv.service;
 
-import com.zrv.sprbootsrv.domain.User;
+import com.zrv.sprbootsrv.domain.user.Auth;
+import com.zrv.sprbootsrv.domain.user.Role;
+import com.zrv.sprbootsrv.domain.user.User;
+import com.zrv.sprbootsrv.dto.AuthResponseDto;
+import com.zrv.sprbootsrv.dto.UserContext;
+import com.zrv.sprbootsrv.repository.user.AuthRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static com.zrv.sprbootsrv.util.TimeUtils.getDateTime;
 
 @Service
 @RequiredArgsConstructor

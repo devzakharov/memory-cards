@@ -1,6 +1,6 @@
 package com.zrv.sprbootsrv.repository.user;
 
-import com.zrv.sprbootsrv.domain.User;
+import com.zrv.sprbootsrv.domain.user.User;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -13,5 +13,7 @@ public interface UserRepository extends CrudRepository<User, UUID> {
 
     @Query("SELECT u FROM User u WHERE u.id = :id")
     Optional<User> findById(UUID id);
+
+    Optional<User> findByAllEmails(String email);
 
 }
