@@ -1,6 +1,7 @@
 package com.zrv.sprbootsrv.domain.user;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,10 +9,12 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
 @Entity
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "user_table")
@@ -44,4 +47,7 @@ public class User {
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private UserStatus status;
+
+    @Column(name = "creation_date", nullable = false)
+    private LocalDateTime creationDate;
 }

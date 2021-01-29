@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS public.user_table
     "password" text NOT NULL,
     email text NOT NULL UNIQUE,
     status text NOT NULL,
+    creation_date timestamp NOT NULL,
     CONSTRAINT user_pkey PRIMARY KEY (id)
 );
 
@@ -59,6 +60,7 @@ CREATE TABLE IF NOT EXISTS public.card_last_answered
     check_counter integer NOT NULL DEFAULT 0,
     CONSTRAINT card_last_answered_pkey PRIMARY KEY (id)
 );
+-- auth table
 CREATE TABLE public.auth
 (
     id          uuid      NOT NULL,
@@ -68,5 +70,30 @@ CREATE TABLE public.auth
     CONSTRAINT auth_pkey PRIMARY KEY (id),
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES user_table (id)
 );
+-- role table
+CREATE TABLE public.role
+(
+    id          serial NOT NULL,
+    "name"      text   NOT NULL,
+    description text   NOT NULL,
+    CONSTRAINT role_pkey PRIMARY KEY (id)
+);
 
+INSERT INTO role ("name", "description")
+VALUES ('USER', 'User');
+INSERT INTO role ("name", "description")
+VALUES ('MODERATOR', 'Moderator');
+INSERT INTO role ("name", "description")
+VALUES ('ADMIN', 'Administrator');
 
+-- user_role table
+CREATE TABLE public.user_role
+(
+    id      uuid NOT NULL,
+    role_id serial NOT NULL,
+    user_id uuid   NOT NULL,
+    CONSTRAINT user_role_pkey PRIMARY KEY (id),
+    CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES role (id),
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES "user_table" (id)
+);
+CREATE INDEX user_role_user_id_idx ON public.user_role USING btree (user_id);

@@ -1,8 +1,10 @@
 package com.zrv.sprbootsrv.service;
 
 import com.zrv.sprbootsrv.domain.user.User;
+import com.zrv.sprbootsrv.domain.user.UserStatus;
 import com.zrv.sprbootsrv.dto.RegisterDto;
 import com.zrv.sprbootsrv.dto.UserContext;
+import com.zrv.sprbootsrv.exception.ErrorType;
 import com.zrv.sprbootsrv.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -15,6 +17,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.zrv.sprbootsrv.exception.AppException.appException;
+import static com.zrv.sprbootsrv.exception.ErrorType.*;
+import static com.zrv.sprbootsrv.util.TimeUtils.getDateTime;
+import static com.zrv.sprbootsrv.domain.user.UserStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +29,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthService authService;
+    private final EmailService emailService;
+
 
     @SneakyThrows
     @Transactional
@@ -38,23 +45,13 @@ public class UserService {
                 .nickname(register.getNickname())
                 .password(passwordEncoder.encode(register.getPassword()))
                 .status(INACTIVE)
-                .createDate(getDateTime())
+                .creationDate(getDateTime())
                 .build();
 
         save(user);
         emailService.sendRegisterConfirm(user);
     }
 
-    @Transactional
-    public void registerConfirm(String token) {
-        User user = getByToken(token);
-
-        if (user.getStatus() != INACTIVE) {
-            throw appException(ErrorType.USER_ALREADY_CONFIRMED, user.getId());
-        }
-        user.setStatus(UserStatus.ACTIVE);
-        save(user);
-    }
 
     @Transactional(readOnly = true)
     public UserContext getRequestContext() {
@@ -72,4 +69,10 @@ public class UserService {
             throw appException(ALREADY_EXIST_USER_BY_EMAIL, email);
         }
     }
+
+    @Transactional
+    public void save(User user) {
+        userRepository.save(user);
+    }
+
 }
